@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirajan Test-2B</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff6347;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            margin: 5px 0 15px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"], input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        input.error {
+            border-color: red;
+        }
+        input.valid {
+            border-color: green;
+        }
+        button {
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.8s ease;
+        }
+        button:hover {
+            background-color: #ff4500;
+        }
+        #message {
+            background-color: #ffebcd; 
+            color: #ff6347; 
+            padding: 15px;
+            border: 1px solid #ff6347;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Booking Place For Your Dinner!</h1>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+        
+        <label for="time">Please Select Time</label>
+        <div>
+            <input type="radio" name="time" value="5:00" id="time1"><label for="time1">5:00</label>
+            <input type="radio" name="time" value="6:00" id="time2"><label for="time2">6:00</label>
+            <input type="radio" name="time" value="7:00" id="time3"><label for="time3">7:00</label>
+            <input type="radio" name="time" value="8:00" id="time4"><label for="time4">8:00</label>
+        </div>
+        
+        <label for="snacks">What Would You Like To Have With Us?</label>
+        <div>
+            <input type="checkbox" name="snacks" value="Starters" id="snack1"><label for="snack1">Starters</label>
+            <input type="checkbox" name="snacks" value="Main_Course" id="snack2"><label for="snack2">Main Course</label>
+            <input type="checkbox" name="snacks" value="Desserts" id="snack3"><label for="snack3">Desserts</label>
+            <input type="checkbox" name="snacks" value="Drinks" id="snack4"><label for="snack4">Drinks</label>
+        </div>
+        
+        <button onclick="tellme()">Submit...</button>
+        
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function validateName() {
+            var name = document.getElementById("name").value;
+            var messageDiv = document.getElementById("message");
+
+            if (name.trim() === "") {
+                document.getElementById("name").classList.add("error");
+                messageDiv.innerHTML = "<span class='error'>Error: Name is empty.</span>";
+                messageDiv.style.display = "block";
+                return false;
+            }
+
+            var nameParts = name.trim().split(" ");
+            if (nameParts.length < 2) {
+                document.getElementById("name").classList.add("error");
+                messageDiv.innerHTML = "<span class='error'>Error: First and last names are required.</span>";
+                messageDiv.style.display = "block";
+                return false;
+            }
+
+            document.getElementById("name").classList.remove("error");
+            document.getElementById("name").classList.add("valid");
+            return true;
+        }
+
+        function validatePhone() {
+            var phone = document.getElementById("phone").value;
+            var messageDiv = document.getElementById("message");
+
+            if (phone.trim() === "") {
+                document.getElementById("phone").classList.add("error");
+                messageDiv.innerHTML = "<span class='error'>Error: Phone number is empty.</span>";
+                messageDiv.style.display = "block";
+                return false;
+            }
+
+            if (!/^[0-9][a-zA-Z0-9]{5}$/.test(phone.trim())) {
+                document.getElementById("phone").classList.add("error");
+                messageDiv.innerHTML = "<span class='error'>Error: Phone number must start with a number and be exactly 6 characters long.</span>";
+                messageDiv.style.display = "block";
+                return false;
+            }
+
+            document.getElementById("phone").classList.remove("error");
+            document.getElementById("phone").classList.add("valid");
+            return true;
+        }
+
+        function tellme() {
+            var nameValid = validateName();
+            var phoneValid = validatePhone();
+            var messageDiv = document.getElementById("message");
+
+            if (!nameValid || !phoneValid) {
+                messageDiv.style.display = "block";
+                return;
+            }
+
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var time = document.querySelector('input[name="time"]:checked').value;
+            var snacks = [];
+            var checkboxes = document.querySelectorAll('input[name="snacks"]:checked');
+            checkboxes.forEach((checkbox) => {
+                snacks.push(checkbox.value);
+            });
+
+            var message = "Reservation For: " + name + " Phone: (" + phone + ") at " + time + ". Snacks are: " + snacks.join(", ");
+            messageDiv.innerHTML = message;
+            messageDiv.style.display = "block";
+        }
+
+        document.getElementById("name").addEventListener("blur", validateName);
+        document.getElementById("phone").addEventListener("blur", validatePhone);
+    </script>
+</body>
+</html>
